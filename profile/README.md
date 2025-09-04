@@ -17,7 +17,7 @@ Your frontends, apps, and AI agents can query it **directly** - no custom APIs o
 
 ## 🛠 Core Capabilities
 
-- **Direct Client Access** - WebSocket + gRPC APIs for frontends and agents
+- **Direct Client Access** - WebSocket + HTTP APIs for frontends and agents
 - **Unified Storage Model** = Tables, counter, locks, ... , and documents in one system
 - **Programmable Logic** - Run custom logic inside the database with WebAssembly
 

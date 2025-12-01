@@ -7,7 +7,7 @@
 
 ---
 
-## 🚀 About ReifyDB
+## About ReifyDB
 
 ReifyDB is a **programmable backend database** that integrates **storage**, **logic**, and **access control** in one
 engine.  
@@ -15,7 +15,7 @@ Your frontends, apps, and AI agents can query it **directly** - no custom APIs o
 
 ---
 
-## 🛠 Core Capabilities
+## Core Capabilities
 
 - **Direct Client Access** - WebSocket + gRPC APIs for frontends and agents
 - **Unified Storage Model** = Tables, counter, locks, ... , and documents in one system
@@ -23,7 +23,7 @@ Your frontends, apps, and AI agents can query it **directly** - no custom APIs o
 
 ---
 
-## 💡 Philosophy
+## Philosophy
 
 > "Your database should be your backend."
 
@@ -36,7 +36,7 @@ We design ReifyDB so you can:
 
 ---
 
-## 🌟 Key Projects
+## Key Projects
 
 | Project                     | Description                                          |
 |-----------------------------|------------------------------------------------------|

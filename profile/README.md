@@ -123,13 +123,3 @@ ReifyDB provides multiple native state primitives under one transactional model.
 ---
 
 ReifyDB simplifies application architectures by replacing stacks of loosely coupled systems with a single, coherent model for managing application state.
-
----
-
-## Key Projects
-
-| Project | Description |
-|-------|------------|
-| **reifydb** (AGPL-3) | Core application state database engine |
-| **typescript-client** (MIT) | Typed client for Node.js, Deno, Bun, and browsers |
-| **rust-client** (MIT) | Native Rust client |

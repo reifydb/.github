@@ -1,125 +1,45 @@
-# ReifyDB – Application State Database
+# ReifyDB
 
-## About ReifyDB
+**The database that runs your backend logic.**
 
-ReifyDB is a **database designed to manage application state**.
+One database instead of Postgres + Redis + a queue + a cron job.
 
-It stores, mutates, and derives live application state under a single transactional model.  
-State is kept in memory for low latency, persisted asynchronously for durability, and extended with application defined logic that runs next to the data.
+## What it is
 
-ReifyDB is built for systems where correctness, freshness, and predictable performance matter more than synchronous durability on every write.
+ReifyDB is one database for live application state: the balances, positions, sessions, workflow steps, counters, and derived numbers your application reads and writes on every request.
 
----
+- **Tables** hold the rows. State lives in memory and is persisted asynchronously, off the hot path.
+- **Views** hold the derived numbers, and the write keeps them current. Nothing to refresh, nothing to poll.
+- **Transitions** run your rules inside the transaction that changes the data. They are procedures and handlers: code you version and test inside the database, not a trigger someone forgot.
+- **Primitives** are built in: counters, queues, ring buffers, histograms, all under the same transaction.
+- **It knows who is asking.** Clients talk to ReifyDB directly over WebSocket or HTTP and authenticate as themselves. Policies decide, per user, what may be read and written. No shared service account, no privileged connection to hijack: a hostile query runs as the user and can do nothing the user could not do anyway.
+- **Embedded or server.** Inside your process like SQLite, or standalone.
 
-## What ReifyDB Is For
+## What it replaces
 
-ReifyDB is designed for **application owned state**, such as:
+| You run today | With ReifyDB |
+|---|---|
+| Postgres + Redis | one transactional store, in memory, persisted asynchronously |
+| Batch materialized views, cron | incremental views, current on write |
+| Workers, queues, logic scattered across services | transitions inside the transaction |
+| Redis + Kafka + custom code for counters and queues | native state primitives |
+| One shared database password, rules re-checked in every service | per-user auth and policies at the data |
 
-- User and session state  
-- Trading and financial state  
-- Game and simulation state  
-- Workflow and process state  
-- Counters, queues, buffers, and aggregates  
-- Derived state that must stay correct as data changes  
+## What it is built on
 
-It is not designed for BI, analytics warehouses, or untrusted multi tenant SQL access.
+1. Derived state is the database's job.
+2. A rule enforced in a service is a rule enforced sometimes.
+3. One write, one truth.
+4. Counters, queues, and buffers are state, not cache.
+5. The network is the speed limit.
+6. The application user is the database user.
 
----
+## What it is not
 
-## Core Capabilities
+Not a BI warehouse and not an analytics engine for ad-hoc queries over cold history. Those belong in different systems.
 
-- **Transactional Application State**  
-  ACID transactions over live, mutable application state with predictable low latency
+## Status
 
-- **Incremental Derived State**  
-  Materialized views that update automatically as state changes, without polling or batch refresh
+Version 0.9. Not production ready. APIs and guarantees will change. Apache-2.0.
 
-- **Programmable State Transitions**  
-  Application defined logic that runs inside the database under the same transactional guarantees
-
-- **Multiple Native State Primitives**  
-  Tables, views, counters, ring buffers, histograms, and other state structures in one engine
-
-- **Asynchronous Durability**  
-  State is persisted off the hot path with bounded durability latency and deterministic recovery
-
-- **Direct Client Access**  
-  Applications and services can connect directly using WebSocket or HTTP without intermediary APIs
-
----
-
-## Design Principles
-
-- Application state is first class  
-- All state changes happen through transactions  
-- Derived state is maintained incrementally  
-- Logic runs next to state, not around it  
-- Durability is decoupled from commit latency  
-- The database is owned by the application, not end users  
-
----
-
-## Philosophy
-
-> Your application state should live in one place.
-
-ReifyDB reduces complexity by eliminating fragmented state across databases, caches, workers, and background jobs.  
-Instead of stitching together multiple systems, ReifyDB provides a single transactional engine for state, logic, and derived data.
-
----
-
-## What ReifyDB Replaces
-
-Modern applications often manage state across multiple systems. Each layer adds complexity, operational overhead, and failure modes.
-
-ReifyDB replaces these patterns by centralizing application state under a single transactional engine.
-
-### Databases Plus Caches
-
-Traditional stacks separate durable storage from fast access layers.
-
-- PostgreSQL or MySQL for persistence  
-- Redis or Memcached for speed  
-- Manual cache invalidation and consistency logic  
-
-ReifyDB combines durability and low latency state access in one system. State is kept in memory for fast reads and writes and persisted asynchronously, removing the need for a separate cache layer.
-
----
-
-### Batch Materialized Views and Polling
-
-Many systems rely on background jobs to keep derived data up to date.
-
-- Periodic refresh of materialized views  
-- Polling based read models  
-- Cron jobs and scheduled workers  
-
-ReifyDB maintains derived state incrementally as part of the write path. Views stay correct automatically as data changes, without polling, refresh jobs, or batch recomputation.
-
----
-
-### Glue Code and Background Workers
-
-Application logic is often scattered across services.
-
-- Triggers in the database  
-- Workers updating counters and aggregates  
-- Custom in memory state machines  
-
-ReifyDB allows application defined state transitions to run inside the database under transactional guarantees. Logic and state evolve together, reducing glue code and synchronization bugs.
-
----
-
-### Fragmented State Primitives
-
-Different state representations are often handled by different systems.
-
-- Tables in databases  
-- Counters and queues in Redis  
-- Buffers and streams in custom services  
-
-ReifyDB provides multiple native state primitives under one transactional model. Tables, counters, ring buffers, and derived views all participate in the same consistency guarantees.
-
----
-
-ReifyDB simplifies application architectures by replacing stacks of loosely coupled systems with a single, coherent model for managing application state.
+[reifydb.com](https://reifydb.com) · [manifesto](https://reifydb.com/manifesto) · [docs](https://reifydb.com/docs) · [github.com/reifydb/reifydb](https://github.com/reifydb/reifydb)
